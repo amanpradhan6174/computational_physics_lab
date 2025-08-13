@@ -30,7 +30,7 @@ def main():
         # ===== SECTION A: Logistic Map =====
         seed = 0.1
         num_points = 1000
-        c_values = [2.5, 3.2, 3.5, 3.8, 3.99]  # Five different c
+        c_values = [2.5, 3.2, 3.5, 3.8, 4.0]  # Five different c
         n_values = [5, 10, 15, 20]
 
         f.write("SECTION A: Logistic Map Correlation\n")
@@ -45,7 +45,7 @@ def main():
                 plt.title(f"Logistic Map Correlation (c={c}, n={n})")
                 plt.savefig(f"logistic_c{c}_n{n}.png", dpi=150)
                 plt.close()
-                f.write(f"  Correlation plot saved: logistic_c{c}_n{n}.png\n")
+                f.write(f"  Correlation plot logistic_c{c}_n{n}.png\n")
 
         # ===== SECTION B: LCG =====
         f.write("\nSECTION B: LCG Random Generator Correlation (k=5)\n")

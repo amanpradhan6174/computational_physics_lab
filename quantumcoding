@@ -1,0 +1,55 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+
+# Constants and parameters
+hbar = 1.0       # Reduced Planck constant (set to 1 for simplicity)
+m = 1.0          # Mass of the particle
+x0 = 0.0         # Initial position of the center of the wave packet
+k0 = 5.0         # Initial wave number (momentum)
+sigma0 = 0.5     # Initial width of the wave packet
+t_max = 2.0      # Maximum time
+dt = 0.02        # Time increment
+N = 400          # Number of spatial points
+x = np.linspace(-10, 10, N)
+
+# Initial Gaussian wave packet (complex wave function)
+def psi_0(x):
+    return (1/(2*np.pi*sigma0**2))**0.25 * np.exp(1j*k0*x) * np.exp(-(x - x0)**2/(4*sigma0**2))
+
+# Time evolution of Gaussian wave packet amplitude and width
+def psi_t(x, t):
+    # Width of the wave packet at time t
+    sigma_t = sigma0 * np.sqrt(1 + (hbar*t/(2*m*sigma0**2))**2)
+    # Amplitude decreases inversely with the spread of the wave packet
+    amplitude = (sigma0/sigma_t)**0.5
+    # Phase factor includes wave number k0 and spreading
+    phase = np.exp(1j * (k0 * (x - x0 - hbar*k0*t/m) - (hbar * k0**2 * t)/(2*m)))
+    # Envelope function (Gaussian)
+    envelope = np.exp(-(x - x0 - hbar*k0*t/m)**2 / (4 * sigma_t**2))
+    # Additional phase factor for spreading
+    spreading_phase = np.exp(1j * (m * (x - x0 - hbar*k0*t/m)**2 * t) / (2 * hbar * (t**2 + (2*m*sigma0**2/hbar)**2)))
+    return amplitude * phase * envelope * spreading_phase
+
+# Set up the figure and axis
+fig, ax = plt.subplots()
+line, = ax.plot(x, np.abs(psi_0(x))**2)
+ax.set_xlim(-10, 10)
+ax.set_ylim(0, 1)
+ax.set_xlabel('Position')
+ax.set_ylabel('Probability Density')
+ax.set_title('Gaussian Wave Packet Evolution with Decreasing Amplitude')
+
+# Animation update function
+def update(frame):
+    t = frame * dt
+    psi = psi_t(x, t)
+    prob_density = np.abs(psi)**2
+    line.set_ydata(prob_density)
+    ax.set_title(f'Gaussian Wave Packet Evolution at t={t:.2f}')
+    return line,
+
+# Create the animation
+ani = FuncAnimation(fig, update, frames=int(t_max/dt), interval=25, blit=True)
+
+plt.show()

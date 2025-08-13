@@ -1,40 +1,40 @@
-# Code for computing mean and standard deviation from data in file
+# Code for computing AB, D·C and BC from matrices in file
 # Name: Your Name, Roll No: Your Roll No
 
-import sys
-import math
+import numpy as np
+
+# Read matrix from a file
+def read_matrix(filename):
+    with open(filename, 'r') as f:
+        lines = f.readlines()
+    matrix = []
+    for line in lines:
+        row = [float(x) for x in line.strip().split()]
+        matrix.append(row)
+    return np.array(matrix)
 
 def main():
-    if len(sys.argv) != 3:
-        print("Usage: python3 avsd.py <no_of_data_points> <data_filename>")
-        sys.exit(1)
+    # Read matrices from .tex files
+    A = read_matrix("A.tex")
+    B = read_matrix("B.tex")
+    C = read_matrix("C.tex")
+    D = read_matrix("D.tex")
 
-    Ndata = int(sys.argv[1])
-    filename = sys.argv[2]
-    data = []
+    # Compute AB, D·C, BC
+    AB = A @ B
+    DC = D @ C
+    BC = B @ C
 
-    try:
-        with open(filename, 'r') as f:
-            for _ in range(Ndata):
-                line = f.readline()
-                if not line:
-                    break
-                parts = line.strip().split()
-                if len(parts) !=2:
-                    continue
-                _, value_str = parts
-                value = float(value_str)
-                data.append(value)
-    except FileNotFoundError:
-        print("Error: File not found.")
-        sys.exit(1)
-
-    average = sum(data) / Ndata
-    variance = sum((x - average)**2 for x in data) / Ndata
-    sd = math.sqrt(variance)
-
+    # Write to output.txt
     with open("output.txt", "w") as fout:
-        fout.write(f"average = {average:.4f}, s.d. = {sd:.4f}\n")
+        fout.write("Matrix AB:\n")
+        fout.write(str(AB) + "\n\n")
+
+        fout.write("Dot Product D·C:\n")
+        fout.write(str(DC) + "\n\n")
+
+        fout.write("Matrix BC:\n")
+        fout.write(str(BC) + "\n")
 
 if __name__ == "__main__":
     main()

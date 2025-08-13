@@ -1,0 +1,15 @@
+def lcg(seed, a=1664525, c=1013904223, m=2**32, n=10):
+    nums = []
+    x = seed
+    for _ in range(n):
+        x = (a * x + c) % m
+        nums.append(x)
+    return nums
+def main():
+    # Example - Generate 10 random numbers
+ 
+    seed = 12345
+    random_numbers = lcg(seed)
+    print(f"LCG Random Numbers:", {random_numbers:.4f}/n/n)
+
+
